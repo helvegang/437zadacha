@@ -2,9 +2,31 @@ const searchInput = document.querySelector("input");    /* ---ИНПУТ */
 const dropdownContainer = document.querySelector(".dropdown-container");   /* ---контейнер для выпадающего списка */
 const selectedContainer = document.querySelector(".selected-container");   /* ---выбирает весь список выбранных */
 
+function eventDropdown(event) {  
+    let target = event.target;
+    if (!target.classList.contains("dropdown-content")) { 
+    return;
+    }
+    addSelected(target);
+    searchInput.value = "";
+    clearDropdownList();
+
+    dropdownContainer.removeEventListener("click", eventDropdown);  /* слушатель события удаляется после того как отработал, потом при вводе в инпут опять создается */
+
+    selectedContainer.addEventListener('click', eventSelectedClose); /* создание слушателя для зыкрытия карточки репозитория */
+};
+
+function eventSelectedClose(event) {
+    let target = event.target;
+    if (!target.classList.contains("button-close")) return; 
+
+    target.parentElement.remove();  
+    selectedContainer.removeEventListener('click', eventSelectedClose); /* слушатель события удаляется после того как отработал, потом создается при отрытии новой карточки репозит. */
+};
 
 async function searchRepositories() {
-    if (searchInput.value == "" || searchInput.value === ' ') {
+    dropdownContainer.addEventListener("click", eventDropdown); /* создание слушателя для открытия реп. из выпадающего списка перенес сюда */
+    if (searchInput.value.trim() == "") {
         clearDropdownList();
         return;
         }
@@ -22,6 +44,7 @@ async function searchRepositories() {
     }
   
     }
+    
   };
 
 function searchDropdown(repositoriesObj) {
@@ -68,23 +91,10 @@ function debounce(fn, debounceTime) {
 
 };
 
-dropdownContainer.addEventListener("click", function(event) {  
-    let target = event.target;
-    if (!target.classList.contains("dropdown-content")) { 
-	return;
-    }
-    addSelected(target);
-    searchInput.value = "";
-    clearDropdownList();
-});
 
 
-selectedContainer.addEventListener("click", function(event) {
-    let target = event.target;
-    if (!target.classList.contains("button-close")) return; 
 
-    target.parentElement.remove();  
-});
+
 
 
 
