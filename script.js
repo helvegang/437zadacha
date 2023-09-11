@@ -21,8 +21,12 @@ function eventSelectedClose(event) {
     if (!target.classList.contains("button-close")) return; 
 
     target.parentElement.remove();  
-    selectedContainer.removeEventListener('click', eventSelectedClose); /* слушатель события удаляется после того как отработал, потом создается при отрытии новой карточки репозит. */
-};
+    if (selectedContainer.innerHTML === "") {
+    selectedContainer.removeEventListener('click', eventSelectedClose); /* слушатель события удаляется после того как отработал, 
+    и если dom контейнер остался пустым, потом создается при отрытии новой карточки репозит. */
+    };
+}
+;
 
 async function searchRepositories() {
     dropdownContainer.addEventListener("click", eventDropdown); /* создание слушателя для открытия реп. из выпадающего списка перенес сюда */
